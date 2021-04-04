@@ -1,8 +1,20 @@
-# Emotion analyzer
+## Project name: Emotion analyzer
 
 
-### Description
+## Description
 
 The program analyzes the mood of the text.
 It sorts and shows the comments with the specified emotional coloring.
 The program can distinguish such emotions: anger, anticipation, disgust, fear, joy, sadness, surprise, trust, and neutrality.
+
+## Table of Contents: 
+
+## Installation: 
+
+## Usage: 
+
+## Contributing: 
+
+## Credits: 
+
+## License:
