@@ -1,2 +1,5 @@
 data/
 venv/
+helper
+try_nltk.py
+__pycache__/

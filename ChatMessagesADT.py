@@ -1,3 +1,5 @@
+import nltk as nltk
+
 from my_array import Array
 
 
@@ -32,7 +34,7 @@ class ChatMessagesADT:
             if message is not None:
                 for sentence in message.sentences:
 
-                    if sentence.emotion:
+                    if sentence is not None and sentence.emotion:
                         self.emotions[sentence.emotion] += 1
 
     def add_message(self, message):
@@ -40,20 +42,38 @@ class ChatMessagesADT:
         Adds Message object
         '''
         self.messages.append(message)
+        for sentence in message:
+            if sentence.emotion:
+                self.emotions[sentence.emotion] += 1
 
     def get_sentences(self, emotion):
         '''
-        Returns sentences with specific tone
+        Returns sentences
+        with specific tone
+        '''
+        filtered = self._filter_sentences(emotion)
+        return str(filtered)
+
+    def _filter_sentences(self, emotion):
+        '''
+        Returns new ChatMessagesADT with sentences
+        with specific tone
         '''
         filtered = ChatMessagesADT(self.messages)
 
-        for emo in self.emotions:
+        for emo in self.emotions.keys():
 
             if emo == emotion:
-                pass
+                continue
 
-            filtered.delete_sentences(emo)
+            filtered = filtered.delete_sentences(emo)
         return filtered
+
+    def get_percentage(self, emotion):
+        number_sentences = sum(self.emotions.values())
+        percentage = (self.emotions[emotion] / number_sentences
+                      if number_sentences != 0 else 0)
+        return round(percentage * 100, 2)
 
     def delete_old(self, save_period):
         '''
@@ -77,12 +97,12 @@ class ChatMessagesADT:
     def delete_sentences(self, emotion):
         '''
         Filters sentences with specific tone in messages
-        Returnes filtered object
+        Returns new object
         '''
         filtered = ChatMessagesADT(self.messages)
 
         for message in filtered.messages:
-            message._del_sentences(emotion)
+            message.delete_sentences(emotion)
 
         filtered.emotions[emotion] = 0
 
@@ -150,7 +170,8 @@ class MessageADT:
         '''
         Generates Array filled with Sentence objects
         '''
-        text = text.split('. ')
+        text = text.split('.')
+        text = [sentence.strip() for sentence in text]
         while '' in text:
             text.remove('')
 
@@ -168,14 +189,14 @@ class MessageADT:
         '''
         self.sentences[idx] = None
 
-    def _del_sentences(self, emotion):
+    def delete_sentences(self, emotion):
         '''
         Removes sentences with a given tone
         '''
         idx = 0
         for sentence in self.sentences:
 
-            if sentence.match_emotion(emotion):
+            if sentence is not None and sentence.emotion == emotion:
                 self.pop(idx)
 
             idx += 1
@@ -240,11 +261,12 @@ class SentenceADT:
         self.text = text
         self.emotion = emotion
 
-    def match_emotion(self, emotion):
-        '''
-        Matches sentences with a specific tone
-        '''
-        return self.emotion == emotion
+    # don't need
+    # def match_emotion(self, emotion):
+    #     '''
+    #     Matches sentences with a specific tone
+    #     '''
+    #     return self.emotion == emotion
 
     def __str__(self):
         """
@@ -260,12 +282,12 @@ if __name__ == '__main__':
     m1[1].emotion = 'anger'
 
     chm1 = ChatMessagesADT([m1, m2])
-    print('-'*50)
+    print('-' * 50)
     for elem in chm1:
         print(elem)
-    print('-'*50)
+    print('-' * 50)
     print(chm1.emotions)
-    print('-'*50)
+    print('-' * 50)
 
     filtered = chm1.delete_sentences('anger')
 
