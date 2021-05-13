@@ -5,6 +5,7 @@ import sys
 class Menu:
     def __init__(self):
         self.options = {'gp': self.get_percentage,
+                        'ga': self.get_all_percentages,
                         'de': self.delete_emotion,
                         'se': self.extract_emotion,
                         'do': self.delete_old,
@@ -20,6 +21,7 @@ class Menu:
         while True:
             print('Menu: ',
                   '- Get percentage of emotions: gp',
+                  '- Get all percentages of emotions: ga',
                   '- Delete sentences with emotion: de',
                   '- Save sentences with emotion to file: se',
                   '- Delete old sentences [option in development]: do',
@@ -34,6 +36,24 @@ class Menu:
         emotion = self.choose_emotion()
         percentage = data_worker.chat_messages.get_percentage(emotion)
         print(f'Percentage of {emotion} is: {percentage}')
+
+    def get_all_percentages(self):
+        """Display percents of all emotions to user"""
+        emotions = data_worker.get_emotions()
+        # emotions_percentage = {}
+        # for emotion in emotions:
+        #     percentage = data_worker.chat_messages.get_percentage(emotion)
+        #     emotions_percentage[emotion] = percentage
+        emotions_percentage = ''
+        for idx, emotion in enumerate(emotions):
+            percentage = data_worker.chat_messages.get_percentage(emotion)
+            emotions_percentage += f"{emotion.upper()}: {percentage}"
+            if idx != len(emotions) - 1:
+                emotions_percentage += "\n"
+
+        print(f'All percentages of emotions:',
+              f'{emotions_percentage}',
+              sep="\n")
 
     def choose_emotion(self):
         """Allows user to choose emotion"""

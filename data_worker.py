@@ -38,5 +38,8 @@ class DataWorker:
     def delete_old_messages(self, save_period):
         pass
 
+    def get_emotions(self):
+        return list(self.chat_messages.emotions.keys())
+
 
 data_worker = DataWorker()
