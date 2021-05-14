@@ -6,18 +6,23 @@ class DataWorker:
     def __init__(self):
         self.chat_messages = ChatMessagesADT()
 
-    def load_messages_to_adt(self, chat_id):
-        messages_text = ['I love my dog. My dog is good!',
-                         'I hope it works. It should work!']
+    def load_messages_to_adt(self, messages_text):
+        # messages_text = ['I love my dog. My dog is good!',
+        #                  'I hope it works. It should work!']
 
         for message_text in messages_text:
-            message = MessageADT(message_text)
+            if message_text is None:
+                continue
+            try:
+                message = MessageADT(message_text)
 
-            for sentence in message:
-                emotion = detect_tone(sentence.text)
-                sentence.emotion = emotion
+                for sentence in message:
+                    emotion = detect_tone(sentence.text)
+                    sentence.emotion = emotion
 
-            self.chat_messages.add_message(message)
+                self.chat_messages.add_message(message)
+            except Exception as ex:
+                print(ex)
 
     def save_emotion_messages(self, emotion, path):
         # TODO: filter sentences with emotion == None
