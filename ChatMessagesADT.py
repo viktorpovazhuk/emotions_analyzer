@@ -18,7 +18,8 @@ class ChatMessagesADT:
                          'joy': 0,
                          'analytical': 0,
                          'confident': 0,
-                         'tentative': 0
+                         'tentative': 0,
+                         'sadness': 0
                          }
 
         if self.messages:
