@@ -1,6 +1,5 @@
-import nltk as nltk
-
-from my_array import Array
+# from my_array import Array
+from node import Node
 
 
 class ChatMessagesADT:
@@ -32,7 +31,7 @@ class ChatMessagesADT:
         for message in self.messages:
 
             if message is not None:
-                for sentence in message.sentences:
+                for sentence in message:
 
                     if sentence is not None and sentence.emotion:
                         self.emotions[sentence.emotion] += 1
@@ -163,10 +162,12 @@ class MessageADT:
         '''
         self.original = text
         self.created = created
-        self.sentences = self.fill_array(
-            text.replace('!', '.').replace('?', '.').replace('...', '.'))
+        self._front = self._rear = None
+        self._size = 0
+        if text != '':
+            self.fill_sentences(text.replace('!', '.').replace('?', '.').replace('...', '.'))
 
-    def fill_array(self, text):
+    def fill_sentences(self, text):
         '''
         Generates Array filled with Sentence objects
         '''
@@ -175,49 +176,74 @@ class MessageADT:
         while '' in text:
             text.remove('')
 
-        sentences = Array(len(text))
+        # sentences = LinkedQueue(text)
 
-        for pos, sentence in enumerate(text):
+        for sentence in text:
             if sentence:
-                sentences[pos] = SentenceADT(sentence)
+                self._add_sentence(SentenceADT(sentence))
 
-        return sentences
+    def _add_sentence(self, item):
+        new_node = Node(item)
+        if self.is_empty():
+            self._front = new_node
+            self._rear = self._front
+        else:
+            self._rear.next = new_node
+            self._rear.next.previous = self._rear
+            self._rear = self._rear.next
+        self._size += 1
 
-    def pop(self, idx):
-        '''
-        Pops element by entered index
-        '''
-        self.sentences[idx] = None
+    # def pop(self, idx):
+    #     '''
+    #     Pops element by entered index
+    #     '''
+    #     self.sentences[idx] = None
 
     def delete_sentences(self, emotion):
         '''
         Removes sentences with a given tone
         '''
-        idx = 0
-        for sentence in self.sentences:
+        # idx = 0
+        # for sentence in self.sentences:
+        #
+        #     if sentence is not None and sentence.emotion == emotion:
+        #         self.pop(idx)
+        #
+        #     idx += 1
+        cur_node = self._front
+        while cur_node is not None:
+            if cur_node.data.emotion == emotion:
+                if cur_node is self._front:
+                    self._front = self._front.next
 
-            if sentence is not None and sentence.emotion == emotion:
-                self.pop(idx)
+                if cur_node is self._rear:
+                    self._rear = cur_node.previous
 
-            idx += 1
+                if cur_node.previous is not None:
+                    cur_node.previous.next = cur_node.next
+                if cur_node.next is not None:
+                    cur_node.next.previous = cur_node.previous
+
+                self._size -= 1
+            cur_node = cur_node.next
 
     def __len__(self):
         '''
         Returns number of sentences
         '''
-        return len(self.sentences)
+        return self._size
 
-    def __getitem__(self, idx):
-        '''
-        Returns Sentence by given index
-        '''
-        return self.sentences[idx]
+    # def __getitem__(self, idx):
+    #     '''
+    #     Returns Sentence by given index
+    #     '''
+    #     return self.sentences[idx]
 
     def __iter__(self):
         '''
         Iterates through sentences
         '''
-        return self.sentences.__iter__()
+        return _MessageIterator(self._front)
 
     def __contains__(self, sentence):
         '''
@@ -232,7 +258,7 @@ class MessageADT:
         '''
         Checks, if message is not empty
         '''
-        if self.sentences:
+        if self._front:
             return False
 
         return True
@@ -241,14 +267,36 @@ class MessageADT:
         '''
         Represents message
         '''
-        sentences = self.sentences
+        # sentences = self.sentences
         message = []
 
-        for sentence in sentences:
+        for sentence in self:
             if sentence:
                 message.append(sentence.text)
 
-        return '. '.join(message) + '.'
+        return '. '.join(message) + '.' if len(message) > 0 else ''
+
+
+class _MessageIterator:
+    """ Iterates through message's elements
+    Source: 'Fundamentals of Python: Data structures'
+    Author: Kenneth A. Lambert """
+
+    def __init__(self, the_head):
+        self._head = the_head
+        self._cur_node = the_head
+
+    def __iter__(self):
+        self._cur_node = self._head
+        return self
+
+    def __next__(self):
+        if self._cur_node is not None:
+            entry = self._cur_node.data
+            self._cur_node = self._cur_node.next
+            return entry
+        else:
+            raise StopIteration
 
 
 class SentenceADT:

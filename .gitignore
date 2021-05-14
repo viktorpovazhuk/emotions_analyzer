@@ -3,3 +3,5 @@ venv/
 helper
 try_nltk.py
 __pycache__/
+filtered_mess.txt
+text_tone.log

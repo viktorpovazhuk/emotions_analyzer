@@ -1,2 +1,1 @@
-.
-I hope it works. It should work.
+It should work.
