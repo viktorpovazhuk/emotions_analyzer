@@ -165,7 +165,8 @@ class MessageADT:
         self._front = self._rear = None
         self._size = 0
         if text != '':
-            self.fill_sentences(text.replace('!', '.').replace('?', '.').replace('...', '.'))
+            self.fill_sentences(text.replace('!', '.').replace(
+                '?', '.').replace('...', '.'))
 
     def fill_sentences(self, text):
         '''
@@ -212,7 +213,9 @@ class MessageADT:
         #     idx += 1
         cur_node = self._front
         while cur_node is not None:
+
             if cur_node.data.emotion == emotion:
+
                 if cur_node is self._front:
                     self._front = self._front.next
 
@@ -221,6 +224,7 @@ class MessageADT:
 
                 if cur_node.previous is not None:
                     cur_node.previous.next = cur_node.next
+
                 if cur_node.next is not None:
                     cur_node.next.previous = cur_node.previous
 

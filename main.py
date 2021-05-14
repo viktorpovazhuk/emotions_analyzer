@@ -78,11 +78,14 @@ class Menu:
 
     def choose_path(self):
         """Allows user to choose path to save"""
-        path = input('Enter file path to save (default is filtered_mess.txt): ')
+        path = input(
+            'Enter file path to save (default is filtered_mess.txt): ')
+
         return 'filtered_mess.txt' if path == '' else path
 
     def choose_period(self):
         period = input("Enter (in days) how old messages save: ")
+
         return period
 
     def delete_emotion(self):

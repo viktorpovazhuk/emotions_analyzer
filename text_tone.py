@@ -5,7 +5,7 @@ from pprint import pprint
 from deep_translator import GoogleTranslator
 import logging
 
-logging.basicConfig(filename='text_tone.log', encoding='utf-8', level=logging.DEBUG)
+# logging.basicConfig(filename='text_tone.log', encoding='utf-8', level=logging.DEBUG)
 
 
 def translate_to_en(text):
@@ -42,7 +42,6 @@ def detect_tone(ukr_text):
         content_type='application/json'
     ).get_result()
     # print(tone_analysis)
-
 
     # return json.dumps(tone_analysis, indent=4)
     tone = None
