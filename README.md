@@ -103,12 +103,6 @@ You can:
 ### Description of test examples:
 ---
 
-### Contributing: 
----
-
-### Credits: 
----
-
 ### License:
 ---
 MIT Licence
