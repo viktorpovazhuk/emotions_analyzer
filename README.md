@@ -1,15 +1,20 @@
 ## Project name: Emotion analyzer
 
 
-### Description
+### Description:
+---
 The program is a telegram bot which analyzes messages in the chat and defines its specified emotional coloring.
 
-The program can distinguish such emotions: anger, anticipation, disgust, fear, joy, sadness, surprise, trust, and neutrality and their percentage in message
+The program can distinguish such emotions: anger, anticipation, disgust, fear, joy, sadness, surprise, trust, and neutrality and their percentage in message.
 
-The main purpose of the program is to track the reaction of other people to messages in the group chats.
-### Input and output data
+The main purpose of the program is to track the reaction of other people to messages and their mood in the telegram chats. You can see the percentage of possible emotions in the messages, delete messages with specified emotion and filter messages that correspond specified emotion.
+### Input and output data:
+---
+The program gets messages from telegram chat and forms list of them.
 
-### Structure
+The program returns string with information about emotion percentage in messages or file with mesagges that correspond specified emotion. It depends on user's choice.
+### Structure:
+---
 1. bot.py - bot module
    - def create_application() - initialize app
    - def load_session_string() - load saved earlier session string from storage file
@@ -24,10 +29,24 @@ The main purpose of the program is to track the reaction of other people to mess
    More about these classes and their methods you can read in wiki
 3. data_worker.py - module to process data
     - class DataWorker - class to process data
-       * h
+       * def load_messages_to_adt(self, messages_text) - loads message to MessageADT
+       * def save_emotion_messages(self, emotion, path) - saves messages thet correspond specified emotion in file
+       * def delete_emotion_messages(self, emotion) - deletes messages which correspond specified emotion
+       * def get_emotions(self) - returns list of possible emotions
+4. main.py - main module with menu
+   - class Menu - menu of the program
+       * def start(self) - runs menu
+       * def download_messages(self) - loads messages from telegram
+       * def get_percentage(self) - returns information about percentage of emotion in messsages
+       * def choose_emotion(self) - allows user to choose emotion
+       * def choose_path(self) - Allows user to choose path to save
+       * def delete_emotion(self) - deletes messages which correspond specified emotion
+       * def extract_emotion(self) - ectracts messages which correspond specified emotion
+       * def exit(self) - allows user to exit the program
 ### Table of Contents: 
-
+---
 ### Installation: 
+---
 for Windows
 ```
 $ git clone https://github.com/viktorpovazhuk/emotions_analyzer
@@ -38,12 +57,58 @@ $ pip install -r requirements.txt
 ```
 
 ### Usage: 
+---
+To use the program you need to install it.
+Then in folder credentials you need to create file  with name config.ini
+Insert the following code into this file
+```
+[pyrogram]
+api_id = 12345
+api_hash = 0123456789abcdef0123456789abcdef
+```
+Change given api id and api hash with your own telegram api id and api hash.
 
-### Description of test examples
+Run main.py.
+
+You will be asked to enter action. Enter 'dm'.
+
+Then enter number of messages you want to analyze.
+```
+Welcome to Emotion Analyzer!
+Menu: 
+- Download messages: dm
+- Get percentage of emotions: gp
+- Get all percentages of emotions: ga
+- Delete sentences with emotion: de
+- Save sentences with emotion to file: se
+- Exit: ex
+Enter action: dm
+Enter limit of messages to download: 100 
+```
+Follow given instructions that will ask you to enter any message to telegram chat, messages which you want to analyze in.
+
+Don't worry, the message will be immediately deleted. This is made only to choose the chat.
+
+Then as the instructions say enter Ctr + C in terminal or Ctr + F2 in PyCharm.
+
+It may take time to download.
+
+Now you are ready to use it!
+
+You can:
+- Get percentage of emotions - you get string with percentage of specified emotion in the messages
+- Get all percentages of emotions - you get string with percentages of all emotions that can be distinguished in the messages
+- Delete sentences with emotion - deletes sentences with specified emotion
+- Save sentences with emotion to file - you get file with messages that correspond specified emotion
+### Description of test examples:
+---
 
 ### Contributing: 
+---
 
 ### Credits: 
+---
 
 ### License:
+---
 MIT Licence
