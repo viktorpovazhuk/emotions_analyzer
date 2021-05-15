@@ -7,20 +7,23 @@ class DataWorker:
         self.chat_messages = ChatMessagesADT()
 
     def load_messages_to_adt(self, messages_text):
-        # messages_text = ['I love my dog. My dog is good!',
-        #                  'I hope it works. It should work!']
 
         for message_text in messages_text:
+
             if message_text is None:
                 continue
             try:
                 message = MessageADT(message_text)
 
                 for sentence in message:
+
                     emotion = detect_tone(sentence.text)
+                    if not emotion:
+                        emotion == 'unrecognized'
                     sentence.emotion = emotion
 
                 self.chat_messages.add_message(message)
+
             except Exception as ex:
                 print(ex)
 
@@ -33,7 +36,7 @@ class DataWorker:
         #     lines += str(message)
         #     lines += '------------------------\n'
 
-        with open(path, 'w') as f:
+        with open(path, 'w', encoding='utf-8') as f:
             f.write(filtered_messages)
 
     def delete_emotion_messages(self, emotion):

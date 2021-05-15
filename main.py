@@ -19,6 +19,7 @@ class Menu:
         #     chat_id = input("Enter your chat id to load messages: ")
         # print("Downloading...")
         self.welcome_message()
+
         while True:
             print('Menu: ',
                   '- Download messages: dm',
@@ -29,7 +30,9 @@ class Menu:
                   '- Delete old sentences [option in development]: do',
                   '- Exit: ex',
                   sep='\n')
+
             option = input('Enter action: ')
+
             if option in self.options:
                 self.options[option]()
 
@@ -40,7 +43,8 @@ class Menu:
         mess_limit = 0
         while mess_limit <= 0:
             try:
-                mess_limit = int(input("Enter limit of messages to download: "))
+                mess_limit = int(
+                    input("Enter limit of messages to download: "))
             except:
                 print("Enter correct number")
         bot.messages_limit = mess_limit
@@ -61,21 +65,27 @@ class Menu:
 
     def get_percentage(self):
         """Display percent of emotion to user"""
+
         emotion = self.choose_emotion()
         percentage = data_worker.chat_messages.get_percentage(emotion)
+
         print(f'Percentage of {emotion} is: {percentage}')
 
     def get_all_percentages(self):
         """Display percents of all emotions to user"""
+
         emotions = data_worker.get_emotions()
         # emotions_percentage = {}
         # for emotion in emotions:
         #     percentage = data_worker.chat_messages.get_percentage(emotion)
         #     emotions_percentage[emotion] = percentage
+
         emotions_percentage = ''
+
         for idx, emotion in enumerate(emotions):
             percentage = data_worker.chat_messages.get_percentage(emotion)
             emotions_percentage += f"{emotion.upper()}: {percentage}"
+
             if idx != len(emotions) - 1:
                 emotions_percentage += "\n"
 
@@ -88,6 +98,7 @@ class Menu:
         print('List of emotions: \n1. anger, \n2. fear, \n3. joy, '
               '\n4. analytical, \n5. confident, \n6. tentative,'
               '\n7. sadness')
+
         emotions = {1: 'anger',
                     2: 'fear',
                     3: 'joy',
@@ -97,13 +108,17 @@ class Menu:
                     7: 'sadness'
                     }
         while True:
+
             try:
                 emotion_number = int(input('Enter number of emotion: '))
+
                 if 1 <= emotion_number <= len(emotions.keys()):
                     emotion = emotions[emotion_number]
                     break
+
             except:
                 print('Enter correct number of emotion')
+
         return emotion
 
     def choose_path(self):
@@ -121,12 +136,14 @@ class Menu:
     def delete_emotion(self):
         emotion = self.choose_emotion()
         data_worker.delete_emotion_messages(emotion)
+
         print('Deleted!')
 
     def extract_emotion(self):
         emotion = self.choose_emotion()
         path = self.choose_path()
         data_worker.save_emotion_messages(emotion, path)
+
         print('Saved')
 
     def delete_old(self):

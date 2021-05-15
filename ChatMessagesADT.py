@@ -1,4 +1,3 @@
-# from my_array import Array
 from node import Node
 
 
@@ -10,7 +9,12 @@ class ChatMessagesADT:
 
     def __init__(self, messages=None):
         '''
-        Parameters
+        Parameters:
+        self.messages contains all messages from the chat in a list.
+
+        self.emotions contains a number of messages with specific emotion
+        in a dict, where self.emotions[emotion] = number of messages with 
+        a such emotion.
         '''
         self.messages = [] if messages is None else messages
         self.emotions = {'anger': 0,
@@ -19,7 +23,8 @@ class ChatMessagesADT:
                          'analytical': 0,
                          'confident': 0,
                          'tentative': 0,
-                         'sadness': 0
+                         'sadness': 0,
+                         'unrecognized': 0
                          }
 
         if self.messages:
@@ -27,7 +32,7 @@ class ChatMessagesADT:
 
     def fill_emotions(self):
         '''
-        Fills emotions dict
+        Fills self.emotions.
         '''
         for message in self.messages:
 
@@ -37,19 +42,23 @@ class ChatMessagesADT:
                     if sentence is not None and sentence.emotion:
                         self.emotions[sentence.emotion] += 1
 
+                    elif sentence is not None and not sentence.emotion:
+                        sentence.emotion = 'unrecognized'
+                        self.emotions[sentence.emotion] += 1
+
     def add_message(self, message):
         '''
-        Adds Message object
+        Adds Message object.
         '''
         self.messages.append(message)
         for sentence in message:
+
             if sentence.emotion:
                 self.emotions[sentence.emotion] += 1
 
     def get_sentences(self, emotion):
         '''
-        Returns sentences
-        with specific tone
+        Returns sentences with specific tone.
         '''
         filtered = self._filter_sentences(emotion)
         return str(filtered)
@@ -57,7 +66,7 @@ class ChatMessagesADT:
     def _filter_sentences(self, emotion):
         '''
         Returns new ChatMessagesADT with sentences
-        with specific tone
+        with specific tone.
         '''
         filtered = ChatMessagesADT(self.messages)
 
@@ -65,11 +74,17 @@ class ChatMessagesADT:
 
             if emo == emotion:
                 continue
+            else:
+                filtered = filtered.delete_sentences(emo)
 
-            filtered = filtered.delete_sentences(emo)
         return filtered
 
     def get_percentage(self, emotion):
+        """
+        Returns the percentage of the specific emotion
+        in relation to all the messages, downloaded from
+        the chat.
+        """
         number_sentences = sum(self.emotions.values())
         percentage = (self.emotions[emotion] / number_sentences
                       if number_sentences != 0 else 0)
@@ -77,7 +92,7 @@ class ChatMessagesADT:
 
     def delete_old(self, save_period):
         '''
-        Deletes messages, which period has expired
+        Deletes messages, which period has expired.
         '''
 
         for idx, message in enumerate(self.messages):
@@ -89,15 +104,15 @@ class ChatMessagesADT:
 
     def delete_message(self, idx):
         '''
-        Deletes a message from ChatMessagesADT
+        Deletes a message from ChatMessagesADT.
         '''
-        self.messages[idx] = None
+        self.messages.pop(idx)
         self.fill_emotions()
 
     def delete_sentences(self, emotion):
         '''
         Filters sentences with specific tone in messages
-        Returns new object
+        Returns new object.
         '''
         filtered = ChatMessagesADT(self.messages)
 
@@ -110,9 +125,21 @@ class ChatMessagesADT:
 
     def __len__(self):
         '''
-        Returns the number of Messages
+        Returns the number of Messages.
         '''
         return len(self.messages)
+
+    def __eq__(self, other: object) -> bool:
+
+        first = str(self)
+        second = str(other)
+
+        for i in range(len(first)):
+
+            if first[i] != second[i]:
+                return False
+
+        return True
 
     def __contains__(self, text):
         '''
@@ -148,7 +175,12 @@ class ChatMessagesADT:
             if message:
                 whole_chat.append(str(message))
 
-        return '\n'.join(whole_chat)
+        result = '\n'.join(whole_chat)
+
+        if result[-2:] != '. ':
+            result += '. '
+
+        return result.replace('. .', '.').replace('..', '.')
 
 
 class MessageADT:
@@ -167,7 +199,7 @@ class MessageADT:
         self._size = 0
         if text != '':
             self.fill_sentences(text.replace('!', '.').replace(
-                '?', '.').replace('...', '.'))
+                '?', '.').replace('...', '.').replace('  ', ' '))
 
     def fill_sentences(self, text):
         '''
@@ -178,40 +210,33 @@ class MessageADT:
         while '' in text:
             text.remove('')
 
-        # sentences = LinkedQueue(text)
-
         for sentence in text:
             if sentence:
                 self._add_sentence(SentenceADT(sentence))
 
     def _add_sentence(self, item):
+        """
+        Adds sentence to the MessageADT.
+        """
+
         new_node = Node(item)
+
         if self.is_empty():
             self._front = new_node
             self._rear = self._front
+
         else:
             self._rear.next = new_node
             self._rear.next.previous = self._rear
             self._rear = self._rear.next
-        self._size += 1
 
-    # def pop(self, idx):
-    #     '''
-    #     Pops element by entered index
-    #     '''
-    #     self.sentences[idx] = None
+        self._size += 1
 
     def delete_sentences(self, emotion):
         '''
         Removes sentences with a given tone
         '''
-        # idx = 0
-        # for sentence in self.sentences:
-        #
-        #     if sentence is not None and sentence.emotion == emotion:
-        #         self.pop(idx)
-        #
-        #     idx += 1
+
         cur_node = self._front
         while cur_node is not None:
 
@@ -238,12 +263,6 @@ class MessageADT:
         '''
         return self._size
 
-    # def __getitem__(self, idx):
-    #     '''
-    #     Returns Sentence by given index
-    #     '''
-    #     return self.sentences[idx]
-
     def __iter__(self):
         '''
         Iterates through sentences
@@ -268,18 +287,30 @@ class MessageADT:
 
         return True
 
+    def __eq__(self, other: object) -> bool:
+
+        first = str(self)
+        second = str(other)
+
+        for i in range(len(first)):
+
+            if first[i] != second[i]:
+                return False
+
+        return True
+
     def __str__(self):
         '''
         Represents message
         '''
-        # sentences = self.sentences
         message = []
 
         for sentence in self:
             if sentence:
-                message.append(sentence.text)
+                message.append(sentence.text.replace('!', '.').replace(
+                    '?', '.').replace('...', '.').replace('  ', ' '))
 
-        return '. '.join(message) + '.' if len(message) > 0 else ''
+        return '. '.join(message) if len(message) > 0 else ''
 
 
 class _MessageIterator:
@@ -296,10 +327,12 @@ class _MessageIterator:
         return self
 
     def __next__(self):
+
         if self._cur_node is not None:
             entry = self._cur_node.data
             self._cur_node = self._cur_node.next
             return entry
+
         else:
             raise StopIteration
 
@@ -314,34 +347,52 @@ class SentenceADT:
         self.text = text
         self.emotion = emotion
 
-    # don't need
-    # def match_emotion(self, emotion):
-    #     '''
-    #     Matches sentences with a specific tone
-    #     '''
-    #     return self.emotion == emotion
+    def __eq__(self, other: object) -> bool:
+
+        first = str(self)
+        second = str(other)
+
+        for i in range(len(first)):
+
+            if first[i] != second[i]:
+                return False
+
+        return True
 
     def __str__(self):
         """
         Represents sentence
         """
-        return self.text + '.'
+        return self.text
 
 
-if __name__ == '__main__':
-    m1 = MessageADT('I love my dog. My dog is good! My dog is a cat... ')
-    m2 = MessageADT('I hope it works. It should work! Hate it... ')
+# if __name__ == '__main__':
+    # s1 = SentenceADT('My dog is a cat... ', 'anger')
+    # m1 = MessageADT('I love my dog. My dog is good! ')
+    # m1._add_sentence(s1)
+    # m2 = MessageADT('I hope it works. It should work! I hate it... ')
 
-    m1[1].emotion = 'anger'
+    # chm1 = ChatMessagesADT([m1, m2])
+    # print('-' * 50)
+    # for elem in chm1:
+    #     print(elem)
+    # print('-' * 50)
+    # print(chm1.emotions)
+    # print('-' * 50)
 
-    chm1 = ChatMessagesADT([m1, m2])
-    print('-' * 50)
-    for elem in chm1:
-        print(elem)
-    print('-' * 50)
-    print(chm1.emotions)
-    print('-' * 50)
+    # filtered = chm1.delete_sentences('anger')
 
-    filtered = chm1.delete_sentences('anger')
+    # print(filtered.emotions)
+    # print(chm1)
 
-    print(filtered.emotions)
+    # m1 = MessageADT('I hope it works. It should work. ')
+    # m2 = MessageADT('I hope it works. It should work! ')
+    # m2._add_sentence(SentenceADT('I hate it... ', 'anger'))
+
+    # print(m2)
+    # chm1 = ChatMessagesADT([m2])
+
+    # # print(chm1)
+    # a = chm1.get_sentences('anger')
+
+    # print(a)
