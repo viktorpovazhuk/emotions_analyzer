@@ -9,9 +9,14 @@ The main purpose of the program is to track the reaction of other people to mess
 ### Table of Contents: 
 
 ### Installation: 
-$ git clone 
-$ cd 
+for Windows
+```
+$ git clone https://github.com/viktorpovazhuk/emotions_analyzer
+
+$ cd C:\Users\user\path_to_project
+
 $ pip install -r requirements.txt
+```
 
 ### Usage: 
 
