@@ -43,8 +43,7 @@ The program returns string with information about emotion percentage in messages
        * def delete_emotion(self) - deletes messages which correspond specified emotion
        * def extract_emotion(self) - ectracts messages which correspond specified emotion
        * def exit(self) - allows user to exit the program
-### Table of Contents: 
----
+
 ### Installation: 
 ---
 for Windows
