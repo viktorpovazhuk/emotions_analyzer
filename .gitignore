@@ -7,3 +7,11 @@ filtered_mess.txt
 text_tone.log
 config.ini
 session.txt
+filtered_analytical.txt
+filtered_sadness.txt
+filtered_joy.txt
+filtered_anger.txt
+filtered_unrecognized.txt
+filtered_confident.txt
+filtered_fear.txt
+filtered_tentative.txt

@@ -28,7 +28,7 @@ class Menu:
         self.welcome_message()
 
         while True:
-            print('Menu: ',
+            print('Menu: \n',
                   '- Download messages: dm',
                   '- Get percentage of emotions: gp',
                   '- Get all percentages of emotions: ga',
@@ -37,20 +37,22 @@ class Menu:
                   # TODO: option in development
                   # '- Delete old sentences: do',
                   '- Exit: ex',
-                  sep='\n')
+                  sep='\n', end='\n\n')
 
             option = input('Enter action: ')
+            print()
 
             if option in self.options:
                 self.options[option]()
 
     def welcome_message(self):
         """Display welcome message"""
-        print("Welcome to Emotion Analyzer!")
+        print("Welcome to Emotion Analyzer!", end='\n\n')
 
     def download_messages(self):
         """Ask downloading preferences and
         initiate downloading"""
+
         mess_limit = 0
         while mess_limit <= 0:
             try:
@@ -60,19 +62,21 @@ class Menu:
                 print("Enter correct number")
         bot.messages_limit = mess_limit
         bot.app.start()
-        print("Go into target chat and send any message in it",
-              "to download messages from this chat.",
-              "Message will be deleted, but it can be still visible",
-              "in users notifications.",
-              "After message is sent send signal one time",
-              "to stop application (e. g.: Ctr + C in terminal ",
-              "or Ctr + F2 in PyCharm).",
+        print('-'*56)
+        print("| Go into target chat and send any message in it       |",
+              "| to download messages from this chat.                 |",
+              "| Message will be deleted, but it can be still visible |",
+              "| in users notifications.                              |",
+              "| After message is sent send signal one time           |",
+              "| to stop application (e. g.: Ctr + C in terminal      |",
+              "| or Ctr + F2 in PyCharm).                             |",
               sep="\n")
+        print('-'*56)
         bot.idle_app()
         bot.app.stop()
-        print("Loading to program...")
+        print("Loading to program...", end='\n\n')
         data_worker.load_messages_to_adt(bot.loaded_messages)
-        print('Loaded')
+        print('Loaded!', end='\n\n')
 
     def get_percentage(self):
         """Display percent of emotion to user"""
@@ -80,7 +84,7 @@ class Menu:
         emotion = self.choose_emotion()
         percentage = data_worker.chat_messages.get_percentage(emotion)
 
-        print(f'Percentage of {emotion} is: {percentage}')
+        print(f'Percentage of {emotion} is: {percentage}', end='\n\n')
 
     def get_all_percentages(self):
         """Display percents of all emotions to user"""
@@ -98,7 +102,7 @@ class Menu:
 
         print(f'All percentages of emotions:',
               f'{emotions_percentage}',
-              sep="\n")
+              sep="\n", end='\n\n')
 
     def choose_emotion(self):
         """Allows user to choose emotion"""
@@ -108,7 +112,7 @@ class Menu:
 
         print('List of emotions:',
               '\n'.join(emotions_list),
-              sep='\n')
+              sep='\n', end='\n\n')
 
         while True:
 
@@ -120,16 +124,16 @@ class Menu:
                     break
 
             except:
-                print('Enter correct number of emotion')
+                print('Enter correct number of emotion', end='\n\n')
 
         return emotion
 
-    def choose_path(self):
+    def choose_path(self, emotion):
         """Allows user to choose path to save"""
         path = input(
-            'Enter file path to save (default is filtered_mess.txt): ')
+            f'Enter file path to save (default is filtered_{emotion}.txt): ')
 
-        return 'filtered_mess.txt' if path == '' else path
+        return f'filtered_{emotion}.txt' if path == '' else path
 
     def choose_period(self):
         """Allows to choose period"""
@@ -140,20 +144,22 @@ class Menu:
     def delete_emotion(self):
         """Initiate delete and save sentences with
         specified emotion"""
+
         emotion = self.choose_emotion()
-        path = self.choose_path()
+        path = self.choose_path(emotion)
         data_worker.delete_and_save_emotion_messages(emotion, path)
 
-        print('Deleted')
+        print('Deleted', end='\n\n')
 
     def extract_emotion(self):
         """Initiate saving sentences
         with specified emotion"""
+
         emotion = self.choose_emotion()
-        path = self.choose_path()
+        path = self.choose_path(emotion)
         data_worker.save_emotion_messages(emotion, path)
 
-        print('Saved')
+        print('Saved', end='\n\n')
 
     def delete_old(self):
         """Initiate delete old sentences"""
