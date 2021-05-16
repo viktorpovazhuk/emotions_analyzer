@@ -99,8 +99,42 @@ You can:
 - Get all percentages of emotions - you get string with percentages of all emotions that can be distinguished in the messages
 - Delete sentences with emotion - deletes sentences with specified emotion
 - Save sentences with emotion to file - you get file with messages that correspond specified emotion
-### Description of test examples:
+### Example of usage:
 ---
+These examples are based on developers' personal chat. You will have different percentages of the emotions
+```
+Enter action: ga
+All percentages of emotions:
+ANGER: 5.56
+FEAR: 0.0
+JOY: 16.67
+ANALYTICAL: 16.67
+CONFIDENT: 5.56
+TENTATIVE: 0.0
+SADNESS: 11.11
+UNRECOGNIZED: 44.44
+Menu:
+- Download messages: dm
+- Get percentage of emotions: gp
+- Get all percentages of emotions: ga
+- Delete sentences with emotion: de
+- Save sentences with emotion to file: se
+- Exit: ex
+```
+```
+Enter action: gp
+List of emotions:
+1. anger
+2. fear
+3. joy
+4. analytical
+5. confident
+6. tentative
+7. sadness
+8. unrecognized
+Enter number of emotion: 1
+Percentage of anger is: 5.56
+```
 
 ### License:
 ---
