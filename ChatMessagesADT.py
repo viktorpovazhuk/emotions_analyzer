@@ -10,11 +10,14 @@ class ChatMessagesADT:
     def __init__(self, messages=None):
         '''
         Parameters:
-        self.messages contains all messages from the chat in a list.
+        self.messages contains all messages objects from the chat in a list.
 
         self.emotions contains a number of messages with specific emotion
         in a dict, where self.emotions[emotion] = number of messages with 
         a such emotion.
+
+        Preconditions:
+        messages: is used for self.messages without copying
         '''
         self.messages = [] if messages is None else messages
         self.emotions = {'anger': 0,
@@ -60,24 +63,15 @@ class ChatMessagesADT:
         '''
         Returns sentences with specific tone.
         '''
-        filtered = self._filter_sentences(emotion)
-        return str(filtered)
+        filtered_messages = []
 
-    def _filter_sentences(self, emotion):
-        '''
-        Returns new ChatMessagesADT with sentences
-        with specific tone.
-        '''
-        filtered = ChatMessagesADT(self.messages)
+        # get filtered text for each message
+        for message in self.messages:
+            filtered_sentences = message.filter_sentences(emotion)
+            if filtered_sentences is not None:
+                filtered_messages.append(filtered_sentences)
 
-        for emo in self.emotions.keys():
-
-            if emo == emotion:
-                continue
-            else:
-                filtered = filtered.delete_sentences(emo)
-
-        return filtered
+        return '\n'.join(filtered_messages)
 
     def get_percentage(self, emotion):
         """
@@ -97,6 +91,7 @@ class ChatMessagesADT:
 
         for idx, message in enumerate(self.messages):
 
+            # rewrite to compare real time
             if message.created > save_period:
                 self.delete_message(idx)
 
@@ -111,17 +106,19 @@ class ChatMessagesADT:
 
     def delete_sentences(self, emotion):
         '''
-        Filters sentences with specific tone in messages
-        Returns new object.
+        Deletes sentences with specific tone in messages
+        and returns deleted sentences
         '''
-        filtered = ChatMessagesADT(self.messages)
+        # get sentences with specified emotion
+        filtered_sentences = self.get_sentences(emotion)
 
-        for message in filtered.messages:
+        # delete sentences with specified emotion
+        for message in self.messages:
             message.delete_sentences(emotion)
 
-        filtered.emotions[emotion] = 0
+        self.emotions[emotion] = 0
 
-        return filtered
+        return filtered_sentences
 
     def __len__(self):
         '''
@@ -257,6 +254,16 @@ class MessageADT:
                 self._size -= 1
             cur_node = cur_node.next
 
+    def filter_sentences(self, emotion):
+        """Returns sentences string with specified emotion
+        or None if no sentences is found"""
+        filtered_sentences = ''
+        for sentence in self:
+            if sentence.emotion == emotion:
+                filtered_sentences += sentence.text + '. '
+        filtered_sentences = filtered_sentences.strip()
+        return filtered_sentences if filtered_sentences != '' else None
+
     def __len__(self):
         '''
         Returns number of sentences
@@ -364,35 +371,3 @@ class SentenceADT:
         Represents sentence
         """
         return self.text
-
-
-# if __name__ == '__main__':
-    # s1 = SentenceADT('My dog is a cat... ', 'anger')
-    # m1 = MessageADT('I love my dog. My dog is good! ')
-    # m1._add_sentence(s1)
-    # m2 = MessageADT('I hope it works. It should work! I hate it... ')
-
-    # chm1 = ChatMessagesADT([m1, m2])
-    # print('-' * 50)
-    # for elem in chm1:
-    #     print(elem)
-    # print('-' * 50)
-    # print(chm1.emotions)
-    # print('-' * 50)
-
-    # filtered = chm1.delete_sentences('anger')
-
-    # print(filtered.emotions)
-    # print(chm1)
-
-    # m1 = MessageADT('I hope it works. It should work. ')
-    # m2 = MessageADT('I hope it works. It should work! ')
-    # m2._add_sentence(SentenceADT('I hate it... ', 'anger'))
-
-    # print(m2)
-    # chm1 = ChatMessagesADT([m2])
-
-    # # print(chm1)
-    # a = chm1.get_sentences('anger')
-
-    # print(a)

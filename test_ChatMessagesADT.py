@@ -96,12 +96,11 @@ class TestMessageADT(TestCase):
         """
         Check get_sentences method from ChatMessagesADT.
         """
-        result = ChatMessagesADT(
-            [MessageADT('I hope it works. ' + 'I hate it... ')])
+        result = 'I hope it works. I hate it.'
         m1 = MessageADT()
-        s1 = SentenceADT('I hope it works. ', 'anger')
-        s2 = SentenceADT('It should work! ', 'confident')
-        s3 = SentenceADT('I hate it... ', 'anger')
+        s1 = SentenceADT('I hope it works', 'anger')
+        s2 = SentenceADT('It should work', 'confident')
+        s3 = SentenceADT('I hate it', 'anger')
 
         m1._add_sentence(s1)
         m1._add_sentence(s2)
@@ -109,8 +108,8 @@ class TestMessageADT(TestCase):
 
         chm1 = ChatMessagesADT([m1])
 
-        chm1.get_sentences('anger')
-        self.assertTrue(chm1 == result)
+        filtered_sentences = chm1.get_sentences('anger')
+        self.assertTrue(filtered_sentences == result)
 
     def test_CMADT_get_percentage(self):
         """

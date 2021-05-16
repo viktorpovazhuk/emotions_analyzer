@@ -13,11 +13,18 @@ class Menu:
                         'do': self.delete_old,
                         'ex': self.exit}
 
+        self.emotions = {1: 'anger',
+                         2: 'fear',
+                         3: 'joy',
+                         4: 'analytical',
+                         5: 'confident',
+                         6: 'tentative',
+                         7: 'sadness',
+                         8: 'unrecognized'
+                         }
+
     def start(self):
-        # chat_id = ""
-        # while chat_id == "":
-        #     chat_id = input("Enter your chat id to load messages: ")
-        # print("Downloading...")
+        """Display menu options and prompt for one"""
         self.welcome_message()
 
         while True:
@@ -27,7 +34,8 @@ class Menu:
                   '- Get all percentages of emotions: ga',
                   '- Delete sentences with emotion: de',
                   '- Save sentences with emotion to file: se',
-                  '- Delete old sentences [option in development]: do',
+                  # TODO: option in development
+                  # '- Delete old sentences: do',
                   '- Exit: ex',
                   sep='\n')
 
@@ -37,9 +45,12 @@ class Menu:
                 self.options[option]()
 
     def welcome_message(self):
+        """Display welcome message"""
         print("Welcome to Emotion Analyzer!")
 
     def download_messages(self):
+        """Ask downloading preferences and
+        initiate downloading"""
         mess_limit = 0
         while mess_limit <= 0:
             try:
@@ -75,10 +86,6 @@ class Menu:
         """Display percents of all emotions to user"""
 
         emotions = data_worker.get_emotions()
-        # emotions_percentage = {}
-        # for emotion in emotions:
-        #     percentage = data_worker.chat_messages.get_percentage(emotion)
-        #     emotions_percentage[emotion] = percentage
 
         emotions_percentage = ''
 
@@ -95,25 +102,21 @@ class Menu:
 
     def choose_emotion(self):
         """Allows user to choose emotion"""
-        print('List of emotions: \n1. anger, \n2. fear, \n3. joy, '
-              '\n4. analytical, \n5. confident, \n6. tentative,'
-              '\n7. sadness')
+        emotions_list = []
+        for idx, emotion in self.emotions.items():
+            emotions_list.append(f"{idx}. {emotion}")
 
-        emotions = {1: 'anger',
-                    2: 'fear',
-                    3: 'joy',
-                    4: 'analytical',
-                    5: 'confident',
-                    6: 'tentative',
-                    7: 'sadness'
-                    }
+        print('List of emotions:',
+              '\n'.join(emotions_list),
+              sep='\n')
+
         while True:
 
             try:
                 emotion_number = int(input('Enter number of emotion: '))
 
-                if 1 <= emotion_number <= len(emotions.keys()):
-                    emotion = emotions[emotion_number]
+                if 1 <= emotion_number <= len(self.emotions.keys()):
+                    emotion = self.emotions[emotion_number]
                     break
 
             except:
@@ -129,17 +132,23 @@ class Menu:
         return 'filtered_mess.txt' if path == '' else path
 
     def choose_period(self):
+        """Allows to choose period"""
         period = input("Enter (in days) how old messages save: ")
 
         return period
 
     def delete_emotion(self):
+        """Initiate delete and save sentences with
+        specified emotion"""
         emotion = self.choose_emotion()
-        data_worker.delete_emotion_messages(emotion)
+        path = self.choose_path()
+        data_worker.delete_and_save_emotion_messages(emotion, path)
 
-        print('Deleted!')
+        print('Deleted')
 
     def extract_emotion(self):
+        """Initiate saving sentences
+        with specified emotion"""
         emotion = self.choose_emotion()
         path = self.choose_path()
         data_worker.save_emotion_messages(emotion, path)
@@ -147,10 +156,12 @@ class Menu:
         print('Saved')
 
     def delete_old(self):
+        """Initiate delete old sentences"""
         period = self.choose_period()
         pass
 
     def exit(self):
+        """Exit the app"""
         print("Thanks for using EA today!")
         sys.exit()
 

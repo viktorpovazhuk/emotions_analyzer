@@ -7,6 +7,7 @@ class DataWorker:
         self.chat_messages = ChatMessagesADT()
 
     def load_messages_to_adt(self, messages_text):
+        """Load list of messages to ChatMessagesADT"""
 
         for message_text in messages_text:
 
@@ -19,7 +20,7 @@ class DataWorker:
 
                     emotion = detect_tone(sentence.text)
                     if not emotion:
-                        emotion == 'unrecognized'
+                        emotion = 'unrecognized'
                     sentence.emotion = emotion
 
                 self.chat_messages.add_message(message)
@@ -28,25 +29,29 @@ class DataWorker:
                 print(ex)
 
     def save_emotion_messages(self, emotion, path):
-        # TODO: filter sentences with emotion == None
+        """Save sentences with particular
+        emotion from messages to file"""
         filtered_messages = self.chat_messages.get_sentences(emotion)
-
-        # lines = ''
-        # for message in filtered_messages:
-        #     lines += str(message)
-        #     lines += '------------------------\n'
 
         with open(path, 'w', encoding='utf-8') as f:
             f.write(filtered_messages)
 
-    def delete_emotion_messages(self, emotion):
-        self.chat_messages = self.chat_messages.delete_sentences(emotion)
-        # TODO: save deleted messages to file
+    def delete_and_save_emotion_messages(self, emotion, path):
+        """Delete sentences with
+        specified emotion from ChatMessagesADT and save deleted
+        sentences"""
+        deleted_messages = self.chat_messages.delete_sentences(emotion)
+
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(deleted_messages)
 
     def delete_old_messages(self, save_period):
+        """Delete messages that were written
+        earlier than save_period from ChatMessagesADT"""
         pass
 
     def get_emotions(self):
+        """Return list of emotions"""
         return list(self.chat_messages.emotions.keys())
 
 

@@ -63,25 +63,8 @@ def detect_tone(ukr_text):
 
 def json_to_tone(json_object):
     """
-    Receives json file and returns the tone of the sentence.
+    Receives json and returns the tone of the sentence.
     """
     tone = json_object['document_tone']['tones'][0]
 
     return tone['tone_id']
-
-
-# if __name__ == "__main__":
-    # ukr = '''Лишилось тільки ще спакуватись... Се було одно з тих незчисленних "треба", \
-    # які мене так утомили і не давали спати. Дарма, чи те "треба" мале, чи велике, — \
-    # вагу те має, що кожен раз воно вимагає уваги, що не я їм, а воно мною уже керує. \
-    # Фактично стаєш невільником сього многоголового звіра. Хоч на час увільнитись \
-    # від нього, забути, спочити. Я утомився. '''
-    # ukr = 'It should work'
-
-    # en = translate_to_en(ukr)
-
-    # output = detect_tone(ukr)
-    # print(output)
-
-    # en = translate_to_en("Готовий до роботи!")
-    # print(en)

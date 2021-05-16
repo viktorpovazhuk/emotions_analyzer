@@ -53,13 +53,3 @@ def download_chat_messages(_, msg):
 def idle_app():
     """Idle app before chat is selected"""
     idle()
-
-
-if __name__ == "__main__":
-    app.start()
-    idle()
-    # while True:
-    #     print('Next code')
-    #     time.sleep(2)
-    print(loaded_messages)
-    app.stop()
