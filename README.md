@@ -58,6 +58,7 @@ $ pip install -r requirements.txt
 ### Usage: 
 ---
 To use the program you need to install it.
+In folder with file named main.py create folder credentials
 Then in folder credentials you need to create file  with name config.ini
 Insert the following code into this file
 ```
