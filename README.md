@@ -1,4 +1,4 @@
-## Project name: Emotion analyzer
+## Project name: Tonanalyzer
 
 
 ### Description:
