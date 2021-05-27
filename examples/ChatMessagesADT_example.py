@@ -34,10 +34,10 @@ def demonstrate_ADT():
     pprint(chm1.emotions)
     print('-' * 45, end='\n\n')
 
-    filtered = chm1.delete_sentences('anger')
+    chm1.delete_sentences('anger')
 
     print('Representation of emotions in chat after changes:', end='\n\n')
-    pprint(filtered.emotions)
+    pprint(chm1.emotions)
     print('-' * 45, end='\n\n')
     print('Chat after filtering process:', end='\n\n')
     print(chm1)
